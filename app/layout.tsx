@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
@@ -32,12 +33,14 @@ const Layout = ({ children, modal }: LayoutProps) => {
     <html lang="en">
       <body className={roboto.variable}>
         <TanStackProvider>
-          <Header />
-          <main>
-            {children}
-            {modal}
-          </main>
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <div className="mainWrapper">
+              {children}
+              {modal}
+            </div>
+            <Footer />
+          </AuthProvider>
         </TanStackProvider>
       </body>
     </html>

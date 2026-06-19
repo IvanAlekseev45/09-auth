@@ -1,0 +1,37 @@
+.navigationItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navigationLink {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.navigationLink:hover {
+  color: #ddd;
+}
+
+.userEmail {
+  color: white;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.logoutButton {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.logoutButton:hover {
+  background-color: white;
+  color: #333;
+}
