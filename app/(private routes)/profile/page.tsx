@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import { Metadata } from "next";
 import css from "./page.module.css";
 
 import { getMe } from "@/lib/api/serverApi";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Profile",
   description: "User profile page",
 };

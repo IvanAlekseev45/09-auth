@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkSession } from "./lib/api/serverApi";
 
 const privateRoutes = ["/profile", "/notes"];
 const authRoutes = ["/sign-in", "/sign-up"];
@@ -10,13 +11,13 @@ export async function proxy(request: NextRequest) {
 
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  const accessToken = request.cookies.get("accessToken");
+  const isAuthenticated = await checkSession();
 
-  if (isPrivateRoute && !accessToken) {
+  if (isPrivateRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
-  if (isAuthRoute && accessToken) {
+  if (isAuthRoute && isAuthenticated) {
     return NextResponse.redirect(new URL("/profile", request.url));
   }
 

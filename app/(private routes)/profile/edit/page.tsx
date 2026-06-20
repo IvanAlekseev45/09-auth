@@ -7,9 +7,12 @@ import { useRouter } from "next/navigation";
 import css from "./page.module.css";
 
 import { getMe, updateMe } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const Page = () => {
   const router = useRouter();
+
+  const setUser = useAuthStore((state) => state.setUser);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -35,9 +38,11 @@ const Page = () => {
     event.preventDefault();
 
     try {
-      await updateMe({
+      const updatedUser = await updateMe({
         username,
       });
+
+      setUser(updatedUser);
 
       router.push("/profile");
     } catch (error) {
@@ -62,7 +67,7 @@ const Page = () => {
               id="username"
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(event) => setUsername(event.target.value)}
               className={css.input}
             />
           </div>

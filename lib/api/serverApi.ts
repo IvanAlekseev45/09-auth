@@ -1,17 +1,14 @@
-import { cookies } from "next/headers";
 import axios from "axios";
+import { cookies } from "next/headers";
 
 import { Note, FetchNotesResponse } from "@/types/note";
 import { User } from "@/types/user";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
-const getHeaders = async () => {
+const getCookieHeader = async () => {
   const cookieStore = await cookies();
-
-  return {
-    Cookie: cookieStore.toString(),
-  };
+  return cookieStore.toString();
 };
 
 export const fetchNotes = async (
@@ -20,7 +17,9 @@ export const fetchNotes = async (
   tag?: string,
 ): Promise<FetchNotesResponse> => {
   const response = await axios.get<FetchNotesResponse>(`${baseURL}/notes`, {
-    headers: await getHeaders(),
+    headers: {
+      Cookie: await getCookieHeader(),
+    },
     params: {
       search,
       page,
@@ -34,7 +33,9 @@ export const fetchNotes = async (
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
   const response = await axios.get<Note>(`${baseURL}/notes/${id}`, {
-    headers: await getHeaders(),
+    headers: {
+      Cookie: await getCookieHeader(),
+    },
   });
 
   return response.data;
@@ -42,16 +43,24 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
 
 export const getMe = async (): Promise<User> => {
   const response = await axios.get<User>(`${baseURL}/users/me`, {
-    headers: await getHeaders(),
+    headers: {
+      Cookie: await getCookieHeader(),
+    },
   });
 
   return response.data;
 };
 
-export const checkSession = async (): Promise<User | null> => {
-  const response = await axios.get<User | null>(`${baseURL}/auth/session`, {
-    headers: await getHeaders(),
+interface CheckSessionResponse {
+  success: boolean;
+}
+
+export const checkSession = async (): Promise<boolean> => {
+  const response = await axios.get<CheckSessionResponse>(`${baseURL}/auth/session`, {
+    headers: {
+      Cookie: await getCookieHeader(),
+    },
   });
 
-  return response.data;
+  return response.data.success;
 };
