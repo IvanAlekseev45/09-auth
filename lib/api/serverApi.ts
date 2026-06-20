@@ -1,10 +1,13 @@
-import axios from "axios";
+import { AxiosResponse } from "axios";
 import { cookies } from "next/headers";
 
+import { api } from "./api";
 import { Note, FetchNotesResponse } from "@/types/note";
 import { User } from "@/types/user";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL + "/api";
+interface CheckSessionResponse {
+  success: boolean;
+}
 
 const getCookieHeader = async () => {
   const cookieStore = await cookies();
@@ -16,7 +19,7 @@ export const fetchNotes = async (
   page: number,
   tag?: string,
 ): Promise<FetchNotesResponse> => {
-  const response = await axios.get<FetchNotesResponse>(`${baseURL}/notes`, {
+  const response = await api.get<FetchNotesResponse>("/notes", {
     headers: {
       Cookie: await getCookieHeader(),
     },
@@ -32,7 +35,7 @@ export const fetchNotes = async (
 };
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
-  const response = await axios.get<Note>(`${baseURL}/notes/${id}`, {
+  const response = await api.get<Note>(`/notes/${id}`, {
     headers: {
       Cookie: await getCookieHeader(),
     },
@@ -42,7 +45,7 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
 };
 
 export const getMe = async (): Promise<User> => {
-  const response = await axios.get<User>(`${baseURL}/users/me`, {
+  const response = await api.get<User>("/users/me", {
     headers: {
       Cookie: await getCookieHeader(),
     },
@@ -51,16 +54,12 @@ export const getMe = async (): Promise<User> => {
   return response.data;
 };
 
-interface CheckSessionResponse {
-  success: boolean;
-}
-
-export const checkSession = async (): Promise<boolean> => {
-  const response = await axios.get<CheckSessionResponse>(`${baseURL}/auth/session`, {
+export const checkServerSession = async (): Promise<AxiosResponse<CheckSessionResponse>> => {
+  const response = await api.get<CheckSessionResponse>("/auth/session", {
     headers: {
       Cookie: await getCookieHeader(),
     },
   });
 
-  return response.data.success;
+  return response;
 };
